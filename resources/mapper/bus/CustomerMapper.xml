@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rin.bus.mapper.CustomerMapper">
+	<resultMap id="BaseResultMap"
+		type="com.rin.bus.domain.Customer">
+		<id column="identity" jdbcType="VARCHAR" property="identity" />
+		<result column="custname" jdbcType="VARCHAR"
+			property="custname" />
+		<result column="sex" jdbcType="INTEGER" property="sex" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="career" jdbcType="VARCHAR" property="career" />
+		<result column="createtime" jdbcType="TIMESTAMP"
+			property="createtime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		identity, custname, sex, address, phone, career, createtime,pwd,loginname
+	</sql>
+	<!-- 用户登陆 -->
+	<select id="login" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from bus_customer
+		where loginname=#{loginname} and pwd=#{pwd}
+	</select>
+	
+	<!-- 用户查询旧密码 -->
+	<select id="getOldPwd" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from bus_customer
+		where identity=#{identity} and pwd=#{oldPwd}
+	</select>
+	
+	<!-- 修改密码 -->
+	<update id="changePwd"
+		parameterType="com.rin.bus.domain.Customer">
+		update bus_customer 
+		set pwd = #{confirmPwd}
+		where identity = #{identity,jdbcType=VARCHAR} and pwd=#{oldPwd}
+	</update>
+	
+	
+	<!-- 修改资料 -->
+	<update id="changeUser"
+		parameterType="com.rin.bus.domain.Customer">
+		update bus_customer 
+		set custname = #{realname,jdbcType=VARCHAR},
+		sex = #{usersex,jdbcType=INTEGER},
+		address = #{province,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR}
+		where identity = #{identity,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>
